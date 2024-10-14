@@ -5,25 +5,19 @@ using UnityEngine.XR.ARFoundation;
 public class FaceController : MonoBehaviour
 {
     [SerializeField] ARFaceManager faceManager;
-
-   // [SerializeField] List<GameObject> cubes = new List<GameObject>(468);
     [SerializeField] GameObject mouthPrefab;
 
-    private GameObject mouthTracker01;
-    private GameObject mouthTracker02;
+    private GameObject upperLip;
+   private GameObject underLip;
+
+
 
     private void Awake()
     {
-        mouthTracker01 = Instantiate(mouthPrefab);
-        mouthTracker02 = Instantiate(mouthPrefab);
-        /*
-        // 정점마다
-        for(int i = 0; i< 468; i++)
-        {
-            // 큐브 생성
-            GameObject cube = Instantiate(cubePrefab);
-            cubes.Add(cube);
-        }*/
+        // 열고닫음 확인용 윗입술 지점
+        upperLip = Instantiate(mouthPrefab);
+        underLip = Instantiate(mouthPrefab);
+
     }
 
     // OnEnable = 오브젝트 활성될 때 호출되는 함수
@@ -47,23 +41,17 @@ public class FaceController : MonoBehaviour
             // AR 페이스를 가져와서
             ARFace face = args.updated[0];
 
+            // 윗입술
             Vector3 mouthPos01 = face.transform.TransformPoint(face.vertices[11]);
+            upperLip.transform.position = mouthPos01;
+
+            // 아랫입술
             Vector3 mouthPos02 = face.transform.TransformPoint(face.vertices[15]);
-            mouthTracker01.transform.position = mouthPos01;
-            mouthTracker02.transform.position = mouthPos02;
+            underLip.transform.position = mouthPos02;
+            
 
-            /*
-            // 얼굴에 있는 모든 점을
-            for (int i = 0; i < face.vertices.Length; i++) 
-            {
-                // Ar의 경우 코를 기준으로 점들이 이루어져있는데
-                // 부모를 기준으로 자식의 위치를 월드좌표로 변환한다
-                // =  얼굴 기준의 위치를 월드 위치로 변환
-                Vector3 vertPos =face.transform.TransformPoint( face.vertices[i]);
+            // Debug.Log($"입 위치 : {mouthPos01}");
 
-                // 생성한 큐브들을 기준의 위치로 이동
-                cubes[i].transform.position = vertPos;
-            }*/
         }
     }
 }
